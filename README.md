@@ -1,2 +1,2 @@
-# todo-app
+# Todo App
 A todo app
