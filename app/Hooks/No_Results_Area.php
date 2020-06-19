@@ -9,6 +9,6 @@ class No_Results_Area {
      * @return void
      */
     public function render( $attributes ) {
-        tdapp_load_template('shortcodes/content-no-results');
+        tdapp_load_template('shortcodes/no-results');
     }
 }
