@@ -1,21 +1,25 @@
-<nav aria-label="Page navigation">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1">Previous</a>
-    </li>
-    <li class="page-item active">
-        <a class="page-link" href="#">1<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="#">2</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#">Next</a>
-    </li>
-  </ul>
-</nav>
-
 <?php
-the_posts_pagination();
+    defined( 'ABSPATH' ) || exit;
+
+    $total   = isset( $data['total'] ) ? $data['total'] : tdapp_get_loop_prop( 'total_pages' );
+    $current = isset( $data['current'] ) ? $data['current'] : tdapp_get_loop_prop( 'current_page' );
+    $base    = isset( $data['base'] ) ? $data['base'] : esc_url_raw( str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ) );
+    $format  = isset( $data['format'] ) ? $data['format'] : '';
+
+    $pages = tdapp_get_page_links( compact('total', 'current', 'base', 'format') );
+    
+    if ( is_array( $pages ) ) { ?>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+        <?php foreach ( $pages as $page ) { 
+          $active_class = (strpos($page, 'current') !== false ? ' active' : '');
+          ?>
+          <li class="page-item<?php echo $active_class ?>">
+            <?php echo str_replace('page-numbers', 'page-link', $page); ?>
+          </li>
+          <?php } ?>
+        </ul>
+      </nav>
+    <?php
+  }
 ?>

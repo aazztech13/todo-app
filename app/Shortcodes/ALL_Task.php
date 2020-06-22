@@ -35,17 +35,33 @@ class ALL_Task {
 
     // get_contents
     public function get_contents() {
-        $tasks = $this->get_query_results();
-
+        $columns = absint( $this->attributes['columns'] );
+        $tasks   = $this->get_query_results();
+        
         ob_start();
 
         if ( $tasks && $tasks->ids ) {
             // Prime caches to reduce future queries.
             if ( is_callable( '_prime_post_caches' ) ) {
                 _prime_post_caches( $tasks->ids );
-			}
+            }
 			
 			$this->get_header();
+
+            // Setup the loop.
+			tdapp_setup_loop(
+				array(
+					'columns'      => $columns,
+					'name'         => 'todo',
+					'is_shortcode' => true,
+					'is_search'    => false,
+					'is_paginated' => tdapp_string_to_bool( $this->attributes['paginate'] ),
+					'total'        => $tasks->total,
+					'total_pages'  => $tasks->total_pages,
+					'per_page'     => $tasks->per_page,
+					'current_page' => $tasks->current_page,
+				)
+			);
 
             $original_post = $GLOBALS['post'];
             tdapp_tasks_loop_start();
@@ -147,10 +163,12 @@ class ALL_Task {
      */
     protected function parse_attributes( $attributes ) {
         $attributes = shortcode_atts( [
-            'page'     => 1,
-            'limit'    => 3,
-            'paginate' => true,
-            'cache'    => true,
+            'limit'    => 3,        // Results limit.
+            'columns'  => 3,       // Number of columns.
+            'rows'     => '',       // Number of rows. If defined, limit will be ignored.
+            'page'     => 1,        // Page for pagination.
+            'paginate' => true,     // Should results be paginated.
+            'cache'    => true,     // Should shortcode output be cached.
         ], $attributes );
 
         return $attributes;
@@ -172,14 +190,18 @@ class ALL_Task {
             $this->attributes['page'] = absint( empty( $_GET['task-page'] ) ? 1 : $_GET['task-page'] );
         }
 
-        if ( isset( $_GET['cache'] ) ) {
-            $this->attributes['cache'] = tdapp_string_to_bool( $_GET['cache'] );
-        }
+        if ( ! empty( $this->attributes['rows'] ) ) {
+			$this->attributes['limit'] =  $this->attributes['columns'] * $this->attributes['rows'];
+		}
 
         $query_args['posts_per_page'] = intval( $this->attributes['limit'] );
 
         if ( 1 < $this->attributes['page'] ) {
             $query_args['paged'] = absint( $this->attributes['page'] );
+        }
+
+        if ( isset( $_GET['cache'] ) ) {
+            $this->attributes['cache'] = tdapp_string_to_bool( $_GET['cache'] );
         }
 
         // Always query only IDs.
