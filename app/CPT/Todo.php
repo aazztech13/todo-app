@@ -17,10 +17,10 @@ class Todo {
      * @return void
      */
     public function register_cpt() {
-        
+
         register_post_type( 'todo', [
-            'label' => 'Todo',
+            'label'  => 'Todo',
             'public' => true,
-        ]);
+        ] );
     }
 }

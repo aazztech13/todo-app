@@ -8,7 +8,7 @@ class Tasks_Pagination {
      *
      * @return void
      */
-    public function render( $attributes ) {
-        tdapp_load_template('shortcodes/pagination');
+    public function render() {
+        tdapp_load_template( 'shortcodes/pagination' );
     }
 }

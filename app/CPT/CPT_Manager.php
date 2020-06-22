@@ -30,11 +30,11 @@ class CPT_Manager {
     public function register_all_cpt() {
         $cpt_list = $this->get_cpt_list();
 
-        if ( ! count( $cpt_list ) ) { return; }
+        if ( ! count( $cpt_list ) ) {return;}
 
         foreach ( $cpt_list as $cpt_name => $class_name ) {
             if ( class_exists( $class_name ) ) {
-                if ( method_exists( $class_name,  'register') ) {
+                if ( method_exists( $class_name, 'register' ) ) {
                     $cpt = new $class_name();
                     $cpt->register();
                 }

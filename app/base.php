@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 $autoloader = TODO_APP_PLUGIN_PATH . 'app/autoloader.php';
 
 if ( file_exists( $autoloader ) ) {
-    require_once( $autoloader );
+    require_once $autoloader;
 }
 
 use TODO_APP\Assets\Enqueue;
@@ -23,11 +23,11 @@ final class TODO_APP {
 
     /**
      * Constructor
-     * 
+     *
      * @return void
      */
     public function __construct() {
-        add_action('init', [ $this, 'register_services' ] );
+        add_action( 'init', [$this, 'register_services'] );
     }
 
     /**
@@ -42,7 +42,6 @@ final class TODO_APP {
 
         return self::$instance;
     }
-
 
     /**
      * Get Services
@@ -66,11 +65,11 @@ final class TODO_APP {
     public function register_services() {
         $services = $this->get_services();
 
-        if ( ! count( $services ) ) { return; }
+        if ( ! count( $services ) ) {return;}
 
         foreach ( $services as $class_name ) {
             if ( class_exists( $class_name ) ) {
-                if ( method_exists( $class_name,  'register') ) {
+                if ( method_exists( $class_name, 'register' ) ) {
                     $service = new $class_name();
                     $service->register();
                 }
@@ -78,7 +77,6 @@ final class TODO_APP {
         }
     }
 }
-
 
 function TODO_APP() {
     return TODO_APP::instance();

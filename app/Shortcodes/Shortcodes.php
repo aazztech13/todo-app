@@ -30,17 +30,15 @@ class Shortcodes {
     public function register_shortcodes() {
         $shortcodes = $this->get_shortcodes();
 
-        if ( ! count( $shortcodes ) ) { return; }
+        if ( ! count( $shortcodes ) ) {return;}
 
         foreach ( $shortcodes as $shortcode_name => $class_name ) {
             if ( class_exists( $class_name ) ) {
-                if ( method_exists( $class_name,  'render') ) {
+                if ( method_exists( $class_name, 'render' ) ) {
                     $shortcode = new $class_name();
-                    add_shortcode( $shortcode_name, [ $shortcode,  'render'] );
+                    add_shortcode( $shortcode_name, [$shortcode, 'render'] );
                 }
             }
         }
     }
 }
-
-    

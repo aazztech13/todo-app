@@ -10,13 +10,13 @@ function tdapp_load_template( $template_path, $data = [], $return_type = 'echo' 
     ob_start();
 
     if ( file_exists( $path ) ) {
-        include( $path );
+        include $path;
     }
 
     $content = ob_get_clean();
 
     if ( 'echo' !== $return_type ) {
-        return ;
+        return;
     }
 
     echo $content;
@@ -48,5 +48,5 @@ function tdapp_tasks_loop_end() {
  * @return bool
  */
 function tdapp_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
+    return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
 }
